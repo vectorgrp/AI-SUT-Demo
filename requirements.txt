@@ -1,0 +1,5 @@
+tensorflow==2.5
+torch==1.10.2
+torchvision
+PILLOW
+numpy
