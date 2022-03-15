@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  tf_sut:
+    build:
+      context: .  
+      args:
+        IMAGE: "nvcr.io/nvidia/tensorflow:21.08-tf2-py3"
+    image: tfsut:latest
+    working_dir: /sut
+    volumes:
+        - ./:/sut
+    environment:
+      - VSIL_INSTANCE_NAME=tf_sut 
+      - VSIL_CONNECTION_ADDRESS=$VSIL_CONNECTION_ADDRESS
+      - HTTP_PROXY=$HTTP_PROXY
+      - HTTPS_PROXY=$HTTPS_PROXY
+    tty: True
+    entrypoint: "python /sut/tf_sut.py"
+
+  torch_sut:
+    build:
+      context: .  
+      args:
+        IMAGE: "nvcr.io/nvidia/pytorch:22.02-py3"
+    image: torchsut:latest
+    working_dir: /sut
+    volumes:
+        - ./:/sut
+    environment:
+      - VSIL_INSTANCE_NAME=torch_sut 
+      - VSIL_CONNECTION_ADDRESS=$VSIL_CONNECTION_ADDRESS
+      - HTTP_PROXY=$HTTP_PROXY
+      - HTTPS_PROXY=$HTTPS_PROXY
+    tty: True
+    entrypoint: "python /sut/torch_sut.py"

@@ -1,0 +1,3 @@
+Copyright 2022 Vector Informatik GmbH
+SPDX-License-Identifier: MIT
+Contact: khanlian.chung@vector.com

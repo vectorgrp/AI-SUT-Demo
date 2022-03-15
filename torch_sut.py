@@ -1,6 +1,5 @@
 import os
 import copy
-
 import torchvision
 from torchvision import transforms
 from PIL import Image
@@ -20,12 +19,15 @@ class sut():
         SilAdapter.disconnect()
 
     def load_model(self):
+        # self.model can be replace by other models
         self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(
             pretrained=True)
         self.model.eval()
         print("Model loaded")
 
     def prep_in_data(self):
+        """Input images from CANoe/CANoe4SW are provided as PIL images. This image has to be preprocessed to be fed to a network
+        """    
         img = demo_utils.retrieve_canoe_img()
         print("New input data received")
 
@@ -35,12 +37,14 @@ class sut():
             return pil_to_tensor
 
     def prep_out_data(self, **kwargs):
+        """First the native network output is put into a local DO and then send to CANoe/CANoe4SW
+        """ 
         print("prep out data")
-        anno_list = demo_utils.prep_annotation(self.output[0]["labels"].detach().numpy(),
-                                    [self.label_map[v] for v in self.output[0]["labels"].detach().numpy()],
-                                    self.output[0]["scores"].detach().numpy(),
-                                    self.output[0]["boxes"].detach().numpy(),
-                                    topk = 15)
+        anno_list = demo_utils.prep_annotation(labelids=self.output[0]["labels"].detach().numpy(),
+                                    labels=[self.label_map[v] for v in self.output[0]["labels"].detach().numpy()],
+                                    confs=self.output[0]["scores"].detach().numpy(),
+                                    bboxs=self.output[0]["boxes"].detach().numpy(),
+                                    topk = 3)
 
         SilAdapter.SutExchange.ImageAnnotation.annotations=anno_list
 
@@ -50,6 +54,8 @@ class sut():
         print(self.output[0]["scores"][0])
 
     def xai_inference(self, **kwargs):
+        """Modify the original model to provide saliency maps
+        """   
         if not(hasattr(self, "xai_model")):
             print("wrapping the model")
             os.environ["PYDEVD_WARN_EVALUATION_TIMEOUT"] = "10"  # if the model is deployed on CPU, it can be quite slow
@@ -60,10 +66,10 @@ class sut():
         print("xAI gradient calculation done")
 
     def prep_out_xai(self, **kwargs):
-        tx_img = demo_utils.prep_xai_send("xai_map",
-                                        self.xai_map,
-                                        self.input.shape[3],
-                                        self.input.shape[2])
+        tx_img = demo_utils.prep_xai_send(name="xai_map",
+                                        img_array=self.xai_map,
+                                        width=self.input.shape[3],
+                                        height=self.input.shape[2])
         SilAdapter.SutExchange.ImageAnnotation.outputImage = tx_img
         print("xAI sent")
 
@@ -95,6 +101,4 @@ if __name__ == "__main__":
     # uncomment to explicitely run an inference
     # sut_instance.run()
     sut_instance.onImageChange()
-
-    print("Press any key to exit")
-    input()
+    input("Press Enter to exit")

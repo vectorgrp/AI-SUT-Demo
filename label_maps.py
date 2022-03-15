@@ -1100,3 +1100,106 @@ def get_invert__label_map(label_map):
     #label_map = get_image_label_map()
     inv_map = {v: k for k, v in label_map.items()}
     return label_map
+
+def try_imagenet_to_coco(id):
+    if id == 444:
+        return 2
+    elif id in [751,817]:
+        return 3
+    elif id in [654, 779, 874]:
+        return 6
+    elif id in [466]:
+        return 7
+    elif id in [555, 569, 717, 864, 867]:
+        return 8
+    elif id in [554, 625, 693, 814]:
+        return 9
+    elif id in [920]:
+        return 10
+    elif id in [12]:
+        return 12
+    elif id in [704]:
+        return 14
+    elif id in [703]:
+        return 15
+    elif id in [13, 14, 94]:
+        return 16
+    elif id in [281, 282, 283, 284, 285, 287, 286]:
+        return 17
+    elif id in [153, 200, 229, 230, 235, 238, 239, 245, 248, 251, 252, 254, 256, 275]:
+        return 18
+    elif id in [990]:
+        return 19
+    elif id in [349]:
+        return 20
+    elif id in [385, 386]:
+        return 22
+    elif id in [294, 295, 296]:
+        return 23
+    elif id in [340]:
+        return 24
+    elif id in [515]:
+        return 26
+    elif id in [414]:
+        return 27
+    elif id in [879]:
+        return 28
+    elif id in [770, 788]:
+        return 29
+    elif id in [457, 906]:
+        return 32
+    elif id in [21]:
+        return 38
+    elif id in [440, 737, 898, 907]:
+        return 44
+    elif id in [334]:
+        return 45
+    elif id in [968]:
+        return 47
+    elif id in [659, 809]:
+        return 51
+    elif id in [954]:
+        return 52
+    elif id in [950]:
+        return 55
+    elif id in [937]:
+        return 56
+    elif id in [934]:
+        return 58
+    elif id in [963]:
+        return 59
+    elif id in [423, 559, 765]:
+        return 62
+    elif id in [831]:
+        return 63
+    elif id in [532]:
+        return 67
+    elif id in [526, 527]:
+        return 69
+    elif id in [861]:
+        return 70
+    elif id in [799]:
+        return 71
+    elif id in [620]:
+        return 73
+    elif id in [761]:
+        return 75
+    elif id in [508]:
+        return 76
+    elif id in [651]:
+        return 78
+    elif id in [859]:
+        return 80
+    elif id in [760]:
+        return 82
+    elif id in [409, 530, 892]:
+        return 85
+    elif id in [883]:
+        return 86
+    elif id in [850]:
+        return 88
+    elif id in [589]:
+        return 89
+    else:
+        print("No matching COCO label found, assigning misc value of 999")
+        return 999
